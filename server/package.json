@@ -9,10 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^2.4.2",
-    "hapi": "^13.3.0",
-    "joi": "^8.0.5",
-    "mongodb": "^2.1.15",
-    "nes": "^4.2.1"
+    "boom": "^4.2.0",
+    "firebase": "^3.6.4",
+    "firebase-admin": "^4.0.4",
+    "hapi": "^16.1.0",
+    "joi": "^10.1.0",
+    "mongodb": "^2.2.19",
+    "nes": "^4.2.1",
+    "wreck": "^10.0.0"
   }
 }

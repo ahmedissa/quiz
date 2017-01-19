@@ -1,48 +1,68 @@
-const net = require('net');
-process.stdin.setEncoding('utf8');
+const firebase = require('firebase');
+const Wreck = require('wreck');
 
-const client = net.createConnection({port: 8124}, () => {
-  //'connect' listener
-  console.log('connected to server!');
-  client.write('world!\r\n');
+const config = {
+  apiKey: "AIzaSyD8UqsW47jswCMAinuRb6SbeXyFK7iROTQ",
+  authDomain: "quiz-72f50.firebaseapp.com",
+  databaseURL: "https://quiz-72f50.firebaseio.com",
+  storageBucket: "quiz-72f50.appspot.com"
+};
 
-
-});
-
-client.on('data', (data) => {
-  console.log(data.toString());
-});
-
-client.on('end', () => {
-  console.log('disconnected from server');
-});
+firebase.initializeApp(config);
 
 
+const sendNewGame = (token) => {
+  Wreck.post('http://localhost:3000/game/new', { headers: {authorization: 'Basic ' + token} }, (err, res, payload) => {
+      console.log(payload.toString() )
+  });
+};
 
-process.stdin.on('readable', () => {
-  var chunk = process.stdin.read();
-  if (chunk !== null) {
-  	client.write(chunk);
-    //process.stdout.write(`data: ${chunk}`);
-  }
-});
+if (process.argv[0] === '1') {
+  firebase.auth().signInWithEmailAndPassword('ioioasdlas@gmail.com', '12345678')
+  .then(function () {
+    firebase.auth().currentUser.getToken(true).then(function(idToken) {
+      console.log('tok', idToken)
+      sendNewGame(idToken);
+    }).catch(function(error) {
+      // Handle error
+    });
 
-process.stdin.on('end', () => {
-  process.stdout.write('end');
-});
+  })
+  .catch(function(error) {
+    if (error){
+      console.log('error')
+      return 'done';
+    }
+    firebase.auth().currentUser.getToken(true).then(function(idToken) {
+      console.log('tok', idToken)
+      sendNewGame(idToken);
+    }).catch(function(error) {
+      // Handle error
+    });
+  });
 
+} else {
+  firebase.auth().signInWithEmailAndPassword('ioioasdlas2@gmail.com', '12345678')
+  .then(function () {
+    firebase.auth().currentUser.getToken(true).then(function(idToken) {
+      console.log('tok', idToken)
+      sendNewGame(idToken);
+    }).catch(function(error) {
+      // Handle error
+    });
 
-function exitHandler(options, err) {
-    if (options.cleanup) console.log('clean'); client.end();
-    if (err) console.log(err.stack);
-    if (options.exit) process.exit();
+  }).catch(function(error) {
+    if (error){
+      console.log('error')
+      return 'done';
+    }
+
+  });
 }
 
-//do something when app is closing
-process.on('exit', exitHandler.bind(null,{cleanup:true}));
 
-//catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
 
-//catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+
+
+
+
